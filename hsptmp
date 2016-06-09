@@ -1,0 +1,906 @@
+#include "a2d.hsp"
+#uselib   "kernel32.dll"
+#uselib "user32.dll"
+#func  SetWindowLong "SetWindowLongA" int,int,int   ;ウィンドウの透明化・半透明化・不透明化_用↓
+#func  SetLayeredWindowAttributes "SetLayeredWindowAttributes" int,int,int,int
+#const LWA_COLORKEY  1         ;透明色を指定
+#const LWA_ALPHA 2             ;アルファー値を指定
+#const GWL_EXSTYLE -20         ;拡張ウィンドウスタイル
+#const WS_EX_LAYERED $00080000 ;透明なウィンドウ属性
+#const WS_EX_TRANSPARENT $00000020
+
+dim SYSTEMTIME, 0
+dim SYSTEMTIME, 2
+dim SYSTEMTIME, 4
+dim SYSTEMTIME, 6
+#define CLSID_ActiveDesktop "{75048700-EF1F-11D0-9888-006097DEACF9}"
+#define IID_IActiveDesktop "{F490EB00-1240-11D1-9888-006097DEACF9}"
+#usecom IActiveDesktop IID_IActiveDesktop CLSID_ActiveDesktop
+#comfunc IActiveDesktop_ApplyChanges 3 int
+#comfunc IActiveDesktop_SetWallpaper 5 wstr, int
+#comfunc IActiveDesktop_SetWallpaperOptions 7 int, int
+#enum WPSTYLE_CENTER = 0	
+#enum WPSTYLE_TILE		
+#enum WPSTYLE_STRETCH	
+
+buffer 1:picload "launcherbtdodai.png" 
+buffer 2:picload "lankogi.png"
+buffer 3:picload "lanpda.png"
+buffer 4:picload "lanmoti.png"
+buffer 5:picload "lantoji.png"
+buffer 6:picload "kgmd.png"
+buffer 8:picload "mtdg.png"
+buffer 9:picload "E1A.png"
+buffer 10:picload"FMSgr.png"
+buffer 11:picload"kogist.png"
+buffer 12:picload"yk.png"
+buffer 13:picload"ep1.png"
+buffer 14:picload"FMSgr2.png"
+buffer 15:picload"epsp.png"
+buffer 16:picload"ksb.png"
+buffer 17:picload"E1C.png"
+buffer 18:picload"EP2.png"
+buffer 19:picload"skds.png"
+buffer 20:picload"sggr.png"
+buffer 21:picload"sszm.png"
+buffer 22:picload"btr.png"
+buffer 23:picload"jhgj.png"
+buffer 24:picload"mtbt.png"
+buffer 25:picload"mball.png"
+buffer 26:picload"wzmsn.png"
+buffer 27:picload"knm.png"
+buffer 28:picload"tstnmn.png"
+buffer 29:picload"epbt.png"
+buffer 30:picload"greenback.png"
+buffer 31:picload"slideneko.png"
+buffer 32:picload"PDAhd.png"
+buffer 33:picload"todobt.png"
+buffer 34:picload"pdmdbt.png"
+buffer 35:picload"tdgk.png"
+buffer 36:picload"tdstbt.png"
+buffer 37:picload"tdnk.png"
+buffer 38:picload"mbbt.png"
+buffer 39:picload"epbtsb.png"
+buffer 40:picload"scbt.png"
+buffer 41:picload"itityousei.png"
+buffer 42:picload"nrbt.png"
+mmload"sbmt.mp3",1
+mmload"mizunomiyako.mp3",2
+mmload"trtr.mp3",3
+mmload"haikyo.mp3",4
+mmload"tutitokaze.mp3",5
+
+*main
+	redraw 0
+	newcom adesktop, CLSID_ActiveDesktop
+	IActiveDesktop_SetWallpaper adesktop, "C:\\Users\\fms\\Desktop\\EP\\メインメニュー風ランチャー\\Wallpaper green.png"
+	WALLPAPEROPT = 8, WPSTYLE_TILE
+	IActiveDesktop_SetWallpaperOptions adesktop, varptr(WALLPAPEROPT)
+	IActiveDesktop_ApplyChanges adesktop, 7
+	redraw
+	redraw 0
+	bgscr 0,353,395,,ginfo_dispx-342,0
+	SetWindowLong hwnd,-20,WS_EX_LAYERED               
+	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY 
+	onclick gosub *move
+	gsel 0,2
+	color 255:boxf
+ 	SetWindowLong hwnd,-20,WS_EX_LAYERED
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	pos 0,0:gcopy 1,0,0,343,395
+	objsize 280,87:	pos 1,23:	objimage 2, 0,0,0,86,0,86:button goto "",*日付変更
+	objsize 280,85:	pos 0,111:	objimage 3, 0,0,0,86,0,86:button goto "",*pda
+	objsize 280,85:	pos 0,199:	objimage 4, 0,0,0,86,0,86:button goto "",*moti
+	objsize 280,85:	pos 0,289:	objimage 5, 0,0,0,86,0,86:button goto "",*toji
+	redraw
+	stop
+*move
+	if wparam=1 : sendmsg hwnd,$00A1,2,0
+	return
+*kogi
+	redraw 0
+	bgscr ,936,750,,(ginfo_dispx-936)/2,(ginfo_dispy-750)/2
+	SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	color 255:boxf
+	gcopy 41,0,0,936,763
+	objsize 129,71:pos 697,617:	objimage 6, 0,0,0,71,0,71:	button goto "",*main
+	objsize 537,84:pos  42,613:  objimage 11,0,0,0,84,0,84:button goto"",*日付変更
+	objsize 352,153:pos 59,126:	objimage 9, 0,0,0,153,0,153:button goto "",*E1Aa
+					pos 58,343: objimage 10,0,0,0,153,0,153:button goto "",*FMSgra
+	objsize 458,90 :pos 432,71: objimage 15,0,0,0,91,0,91:button goto"",*EPsp
+	redraw 1
+	wait　150
+	While 1
+		getkey esc,27
+		if esc : gosub *main
+		wait 1
+	Wend
+	stop
+*日付変更
+	bgscr ,150,50,,(ginfo_dispx-150)/2,180
+	defdir=dir_cur
+	chdir "C:\\Users\\fms\\Desktop\\EP\\calendar" 
+	exec "calendar.exe"
+	chdir defdir
+	color:boxf
+	pos 10,15
+	winobj "sysdatetimepick32", "", , $50000000, 120
+	hDtp.0 = objinfo(stat, 2)
+	While 1
+		getkey ent,13
+		if ent : gosub *get
+		getkey esc,27
+		if esc : gosub *kogi
+		wait 1
+	Wend
+	stop
+	*get
+		sendmsg hDtp.0, $1001, , varptr(SYSTEMTIME)
+		if (wpeek(SYSTEMTIME, 6)=23)&&(wpeek(SYSTEMTIME,2)=5)&&(wpeek(SYSTEMTIME, 0)=2016):goto *kogi
+		if wpeek(SYSTEMTIME, 4)=1:goto *kogi1
+		if wpeek(SYSTEMTIME, 4)=2:goto *kogi2
+		if wpeek(SYSTEMTIME, 4)=3:goto *kogi3
+		if wpeek(SYSTEMTIME, 4)=4:goto *kogi4
+		if wpeek(SYSTEMTIME, 4)=5:goto *kogi5
+		if wpeek(SYSTEMTIME, 4)=6:dialog"全休",1
+		if wpeek(SYSTEMTIME, 4)=0:dialog"日曜日だよ"
+		if (wpeek(SYSTEMTIME, 6)=28)&&(wpeek(SYSTEMTIME,2)=5)&&(wpeek(SYSTEMTIME, 0)=2016):goto *kusuda
+		goto *日付変更
+*kusuda
+	dialog"くすだあいなさんのイベントだよ！"
+	wait　150
+	While 1
+		getkey esc,27
+		if esc : gosub *main
+		wait 1
+	Wend
+	stop
+*kogi1
+	redraw 0
+	bgscr ,936,750,,(ginfo_dispx-936)/2,(ginfo_dispy-750)/2
+	SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	color 255:boxf
+	gcopy 41,0,0,936,763
+	objsize 129,71:pos 697,617:	objimage 6, 0,0,0,71,0,71:	button goto "",*main
+	objsize 537,84:pos  42,613:  objimage 11,0,0,0,84,0,84:button goto"",*日付変更
+	objsize 352,153:pos 59,126:	objimage 9, 0,0,0,153,0,153:button goto "",*E1A
+					pos 58,343: objimage 10,0,0,0,153,0,153:button goto "",*FMSgrg
+	objsize 458,90 :pos 432,71: objimage 13,0,0,0,91,0,91:button goto"",*EPg
+	redraw 1
+	wait　150
+	While 1
+		getkey esc,27
+		if esc : gosub *main
+		wait 1
+	Wend
+	stop
+
+*kogi2
+	redraw 0
+	bgscr ,936,750,,(ginfo_dispx-936)/2,(ginfo_dispy-750)/2
+	SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	color 255:boxf
+	gcopy 41,0,0,936,763
+	objsize 129,71:	pos 697,617:objimage 6, 0,0,0,71,0,71:		button goto "",*main
+	objsize 537,84:	pos  42,613:objimage 11,0,0,0,84,0,84:		button goto"",*日付変更
+	objsize 352,153:pos 59,126:	objimage 16, 0,0,0,153,0,153:	button goto "",*基礎微積分
+					pos 58,343: objimage 23,0,0,0,153,0,153:	button goto "",*情報技術概論
+	redraw 1
+	wait 100
+	While 1
+ 		getkey esc,27
+ 		if esc : gosub *main
+ 		wait 1
+	Wend
+	stop	
+
+*kogi3
+	redraw 0
+	bgscr ,936,750,,(ginfo_dispx-936)/2,(ginfo_dispy-750)/2
+	SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	color 255:boxf
+	gcopy 41,0,0,936,763
+	objsize 129,71:pos 697,617:	objimage 6, 0,0,0,71,0,71:		button goto "",*main
+	objsize 537,84:pos  42,613: objimage 11,0,0,0,84,0,84:		button goto"",*日付変更
+	objsize 352,153:pos 59,126:	objimage 17, 0,0,0,153,0,153:	button goto "",*E1C
+					pos 58,343: objimage 18,0,0,0,153,0,153:	button goto "",*EPs
+	objsize 458,90 :pos 432,71: objimage 14,0,0,0,91,0,91:		button goto"",*FMSgrs
+	redraw 1
+	wait 100
+	While 1
+ 		getkey esc,27
+ 		if esc : gosub *main
+ 		wait 1
+	Wend
+	stop
+	
+*kogi4
+	redraw 0
+	bgscr ,936,750,,(ginfo_dispx-936)/2,(ginfo_dispy-750)/2
+	SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	color 255:boxf
+	gcopy 41,0,0,936,763
+	objsize 129,71:pos 697,617:	objimage 6, 0,0,0,71,0,71:	button goto "",*main
+	objsize 537,84:pos  42,613:  objimage 11,0,0,0,84,0,84:button goto"",*日付変更
+	objsize 352,153:pos 59,126:	objimage 19, 0,0,0,153,0,153:button goto "",*線形代数
+	redraw 1
+	wait 100
+	While 1
+ 		getkey esc,27
+ 		if esc : gosub *main
+ 		wait 1
+	Wend
+	stop
+
+*kogi5
+	redraw 0
+	bgscr ,936,750,,(ginfo_dispx-936)/2,(ginfo_dispy-750)/2
+	SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	color 255:boxf
+	gcopy 41,0,0,936,763
+	objsize 129,71:pos 697,617:	objimage 6, 0,0,0,71,0,71:	button goto "",*main
+	objsize 537,84:pos  42,613:  objimage 11,0,0,0,84,0,84:button goto"",*日付変更
+	objsize 352,153:pos 59,126:	objimage 20, 0,0,0,153,0,153:button goto "",*総数概論
+					pos 58,343: objimage 21,0,0,0,153,0,153:button goto "",*ゼミナール
+	objsize 458,90 :pos 432,71: objimage 22,0,0,0,91,0,91:button goto"",*物理学入門
+	redraw 1
+	wait 100
+	While 1
+ 		getkey esc,27
+ 		if esc : gosub *main
+ 		wait 1
+	Wend
+	stop	
+//授業内容////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	*EPsp
+	bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+	SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+	color 255:boxf
+	gcopy 8,22,506,362,190
+	objsize 170,68:pos 28,20:	objimage 12, 0,0,0,69,0,69:	button goto "",*EPkokuti
+	objsize 179,64:pos 28,104:	objimage 29, 0,0,0,65,0,65:	button goto "",*EPhash
+	objsize 109,46:pos 220,23:	objimage 39, 0,0,0,47,0,47:	button goto "",*EPsp1
+	objsize 109,46:pos 220,69:	objimage 39, 0,93,0,138,0,138:	button goto "",*EPsp2
+	objsize 109,46:pos 220,115:	objimage 39, 0,184,0,230,0,230:	button goto "",*EPsp3
+	While 1
+ 		getkey esc,27
+ 		if esc : gosub *kogi
+ 		wait 1
+	Wend
+		stop
+		
+	*E1Aa
+		goto *kogi:stop
+		
+	*FMSgra:*FMSgrg:*FMSgrs
+		a="FMS概論"
+		exec "https://twitter.com/hashtag/"+a,16
+		goto *main:	stop
+		
+	*E1A
+		 goto *kogi1: stop
+	
+	*EPg:*EPs
+		a="EP演習"
+		exec "https://twitter.com/hashtag/"+a,16
+		goto *main:stop
+	
+	*基礎微積分
+		goto *kogi2:stop
+	 	
+	*情報技術概論
+		a="情報技術概論"
+		exec "https://twitter.com/hashtag/"+a,16
+		goto *main:	stop
+		
+	*E1C
+		goto *kogi3:stop	
+	*線形代数
+		goto *kogi4
+
+	*総数概論
+		a="総数概論"
+		exec "https://twitter.com/hashtag/"+a,16
+		goto *main
+		stop
+	*ゼミナール
+		bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+		SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 		SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+		color 255:boxf
+		gcopy 8,22,506,362,190
+		objsize 331,49:pos 16,19:	objimage 40, 0,0,0,50,0,50:	button goto "",*zms3
+		objsize 331,49:pos 16,68:	objimage 40, 0,99,0,148,0,148:	button goto "",*zms4
+		objsize 331,49:pos 16,117:	objimage 40, 0,197,0,246,0,246:	button goto "",*zms5over
+		While 1
+ 			getkey esc,27
+ 			if esc : gosub *kogi5
+ 			wait 1
+		Wend
+		stop
+		*zms3
+			exec "http://www.fms.meiji.ac.jp/internal/archives/151"
+			goto *main
+			stop
+		*zms4
+			exec "http://www.fms.meiji.ac.jp/internal/archives/156"
+			goto *main
+			stop
+		*zms5over
+			dialog "公式の発表をお待ちください。"
+			While 1
+ 				getkey esc,27
+ 				if esc : gosub *kogi5
+ 				wait 1
+			Wend
+	*物理学入門
+		goto *kogi5
+		stop
+//////////////////////////////////////EP演習発表会用ハッシュタグ系統/////////////////////////////////////////////////////////////////////////////////////////////
+	*EPkokuti
+		exec"http://www.fms-meiji.jp/archives/1107",16
+		goto *main
+		stop
+	*EPhash
+		a="EP演習"
+		exec "https://twitter.com/hashtag/"+a,16
+		goto *main
+		stop
+	*EPsp1
+		exec "http://togetter.com/li/975954",16
+		goto *main
+		stop
+	*EPsp2
+		exec "http://togetter.com/li/978692?page=%EF%BC%91",16
+		goto *main
+		stop
+	*EPsp3
+		dialog"イベントは実行中です。イベントが終了してから再試行してください"
+		goto *kogi
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////pda//////////////////////////////////////////////////////////////////////////////////////////
+*pda
+	redraw 0
+	newcom adesktop, CLSID_ActiveDesktop
+	IActiveDesktop_SetWallpaper adesktop, "C:\\Users\\fms\\Desktop\\EP\\メインメニュー風ランチャー\\greenback.png"
+	WALLPAPEROPT = 8, WPSTYLE_TILE
+	IActiveDesktop_SetWallpaperOptions adesktop, varptr(WALLPAPEROPT)
+	IActiveDesktop_ApplyChanges adesktop, 7
+	redraw
+	bgscr ,1021,650,,(ginfo_dispx-1021),(ginfo_dispy-765)
+	SetWindowLong hwnd,-20,WS_EX_LAYERED
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY ;
+ 	color 255:boxf
+ 	repeat 10
+ 	pos 0,-160+cnt*17
+ 	gcopy  32,0,0,1021,170
+	pos 1011-cnt*54,225
+	gcopy 31,0,0,500,415:
+ 	await 10
+ 	loop
+ 	redraw 0
+ 	objsize 500,415:pos 525,225:objimage 31, 0,0:	button goto "",*twitter
+ 	objsize 386,73:pos 75,230:	objimage 33, 0,0,0,74,0,74:	button goto "",*todo
+	objsize 278,68:pos 72,420:	objimage 34, 0,0,0,68,0,68:	button goto "",*main
+ 	redraw
+ 	wait 150
+ 	While 1
+	 getkey esc,27
+	 if esc : gosub *main
+	 wait 1
+	Wend
+	stop
+	*twitter
+		exec"https://twitter.com/auk_key_ikon",16
+		goto *main
+		stop
+	*todo
+		bgscr ,1021,765,,(ginfo_dispx-1021),(ginfo_dispy-765)
+		SetWindowLong hwnd,-20,WS_EX_LAYERED               
+ 		SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY 
+ 		redraw 0
+ 		color 255:boxf
+ 		gcopy  32,0,0,1021,170
+ 		pos 61,202
+ 		gcopy 35,0,0,895,486
+ 		objsize 35,33:pos 121,232:objimage 36, 0,0:	button goto "",*todost
+		color 255,255,255
+		if naiyou!0:objsize 85,44:pos 93,282:objimage 37, 0,0:	button goto "",*syokyo1:pos 214,286:mes hiduke:pos 414,286:mes naiyou
+		if naiyou2!0:objsize 85,44:pos 93,326:objimage 37, 0,0:	button goto "",*syokyo2:pos 214,326:mes hiduke2:pos 414,326:mes naiyou2
+		if naiyou3!0:objsize 85,44:pos 93,370:objimage 37, 0,0:	button goto "",*syokyo3:pos 214,370:mes hiduke3:pos 414,370:mes naiyou3
+		if naiyou4!0:objsize 85,44:pos 93,414:objimage 37, 0,0:	button goto "",*syokyo4:pos 214,414:mes hiduke4:pos 414,414:mes naiyou4
+		if naiyou5!0:objsize 85,44:pos 93,458:objimage 37, 0,0:	button goto "",*syokyo5:pos 214,458:mes hiduke5:pos 414,458:mes naiyou5
+		if naiyou6!0:objsize 85,44:pos 93,502:objimage 37, 0,0:	button goto "",*syokyo6:pos 214,502:mes hiduke6:pos 414,502:mes naiyou6
+		if naiyou7!0:objsize 85,44:pos 93,546:objimage 37, 0,0:	button goto "",*syokyo7:pos 214,546:mes hiduke7:pos 414,546:mes naiyou7
+		if naiyou8!0:objsize 85,44:pos 93,590:objimage 37, 0,0:	button goto "",*syokyo8:pos 214,590:mes hiduke8:pos 414,590:mes naiyou8
+		redraw
+		While 1
+			getkey esc,27
+			if esc : gosub *pda
+			wait 1
+		Wend
+		stop
+		*syokyo1
+			x=x-1
+			naiyou=0
+			hiduke=0
+			clrobj ,-1
+			goto *todo
+		*syokyo2
+			x=x-1
+			naiyou2=0
+			hiduke2=0
+			clrobj ,-1
+			goto *todo
+		*syokyo3
+			x=x-1
+			naiyou3=0
+			hiduke3=0
+			clrobj ,-1
+			goto *todo
+		*syokyo4
+			x=x-1
+			naiyou4=0
+			hiduke4=0
+			clrobj ,-1
+			goto *todo
+		*syokyo5
+			x=x-1
+			naiyou5=0
+			hiduke5=0
+			clrobj ,-1
+			goto *todo
+		*syokyo6
+			x=x-1
+			naiyou6=0
+			hiduke6=0
+			clrobj ,-1
+			goto *todo
+		*syokyo7
+			x=x-1
+			naiyou7=0
+			hiduke7=0
+			clrobj ,-1
+			goto *todo
+		*syokyo8
+			x=x-1
+			naiyou8=0
+			hiduke8=0
+			clrobj ,-1
+			goto *todo
+		*todost
+			x=x+1
+			if x=1:goto*tdst1
+			if x=2:goto*tdst2
+			if x=3:goto*tdst3
+			if x=4:goto*tdst4
+			if x=5:goto*tdst5
+			if x=6:goto*tdst6
+			if x=7:goto*tdst7
+			if x=8:goto*tdst8
+			if x>8:dialog"表示上限です"
+			goto *todo
+			stop
+		*tdst1			
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou=""
+			hiduke=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+		*tdst2
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou2=""
+			hiduke2=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou2
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke2
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+		*tdst3
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou3=""
+			hiduke3=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou3
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke3
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+		*tdst4
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou4=""
+			hiduke4=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou4
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke4
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+		*tdst5
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou5=""
+			hiduke5=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou5
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke5
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+		*tdst6
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou6=""
+			hiduke6=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou6
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke6
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+		*tdst7
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou7=""
+			hiduke7=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou7
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke7
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+		*tdst8
+			bgscr ,362,190,,(ginfo_dispx-362)/2,(ginfo_dispy-192)/2
+			SetWindowLong hwnd,-20,WS_EX_LAYERED              
+ 			SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY
+			color 255:boxf
+			gcopy 8,22,506,362,190
+			naiyou8=""
+			hiduke8=""
+			color 255,255,255
+			pos 50,35
+			mes"やることを入力してね"
+			objsize 262,24
+			input naiyou8
+			mes"期限を入力してね（空欄でもいいよ）"
+			input hiduke8
+			objsize 262,24:	objimage 42, 0,0,0,24,0,24:button goto "",*todo
+			While 1
+				getkey sps,32
+				if sps : gosub *todo
+				getkey esc,27
+				if esc : gosub *todo
+				wait 1
+			Wend
+			stop
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////もちもの////////////////////////////////////////////////////////////////////////////////////////
+*moti
+	bgscr ,935,765,,(ginfo_dispx-935),(ginfo_dispy-765)
+	SetWindowLong hwnd,-20,WS_EX_LAYERED               ;|WS_EX_TRANSPARENT
+	;SetLayeredWindowAttributes hwnd,0,128,LWA_ALPHA
+ 	SetLayeredWindowAttributes hwnd,255,0,LWA_COLORKEY ;
+	
+	*dogu	
+		redraw 0
+		cls
+		color 255:boxf
+		gcopy 8,0,0,ginfo_dispx,ginfo_dispy//外観設定
+		objsize 56,48:pos 514,127:	objimage 24, 0,0, 0,0:	button goto "",*dogu
+		objsize 56,48:pos 571,127:	objimage 24, 57,0,57,0 :	button goto "",*mball
+		objsize 56,48:pos 628,127:	objimage 24,114,0,114,0:	button goto "",*waza
+		objsize 56,48:pos 685,127:	objimage 24,171,0,171,0:	button goto "",*knm
+		objsize 45,48:pos 742,127:	objimage 24,228,0,228,0:	button goto "",*taisetunamono
+		objsize 477,58:pos 411,236:	objimage 38,0,117,0,175,0,175:	button goto "",*iikizu//いいキズ薬
+		objsize 477,58:pos 411,294:	objimage 38,0,233,0,291,0,291:	button goto "",*kizu//キズ薬
+		objsize 477,58:pos 411,352:	objimage 38,0,349,0,407,0,407:	button goto "",*doku//どくけし
+		objsize 477,58:pos 411,410:	objimage 38,0,465,0,523,0,523:	button goto "",*yakedo//yakedo
+		objsize 477,58:pos 411,468:	objimage 38,0,581,0,639,0,639:	button goto "",*mahi//mahi
+		objsize 477,58:pos 411,526:	objimage 38,0,697,0,755,0,755:	button goto "",*nemuke//nemuke
+		*ikanai1
+		redraw
+		While 1
+			getkey esc,27
+			if esc : gosub *main
+			wait 1
+		Wend	
+		stop
+		*iikizu
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"たぶんHPをたくさん回復する。表面が\n緑色に濁っている。"
+			onclick goto *dogu
+			stop
+		*kizu
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"たぶんHPを回復する。"
+			onclick goto *dogu
+			stop
+		*doku
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"たぶんどくが消える。確率でひんし\n状態になる。"
+			onclick goto *dogu
+			stop
+		*yakedo
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"いわゆるアロエ。治るかどうかはわか\nらない。"
+			onclick goto *dogu
+			stop
+		*mahi
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"リハビリテーションセンターと書か\nれている診療券。直接効くわけじゃない。"
+			onclick goto *dogu
+			stop
+		*nemuke
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"いわゆるＭＯＮＳＴＥＲ.(緑)。\n近くのショップでは品切れのようだ。"
+			onclick goto *dogu
+			stop
+			
+	
+	*mball
+		redraw 0	
+		cls
+		color 255:boxf
+		gcopy 25,0,0,ginfo_dispx,ginfo_dispy//外観設定
+		objsize 56,48:pos 514,127:	objimage 24, 0,49,0,49:	button goto "",*dogu
+		objsize 56,48:pos 571,127:	objimage 24, 57,49,57,49:	button goto "",*mball
+		objsize 56,48:pos 628,127:	objimage 24,114,49,114,49:	button goto "",*waza
+		objsize 56,48:pos 685,127:	objimage 24,171,49,171,49:	button goto "",*knm
+		objsize 45,48:pos 742,127:	objimage 24,228,49,228,49:	button goto "",*taisetunamono
+		objsize 477,58:pos 411,236:	objimage 38,0,0,0,59,0,59:	button goto "",*waketimer
+		redraw 1
+		While 1
+	 		getkey esc,27
+	 		if esc : gosub *main
+	 		wait 1
+		Wend
+		stop
+
+	*waza
+		redraw 0
+		cls
+		color 255:boxf
+		gcopy 26,0,0,ginfo_dispx,ginfo_dispy//外観設定
+		objsize 56,48:pos 514,127:	objimage 24, 0,98,0,98:	button goto "",*dogu
+		objsize 56,48:pos 571,127:	objimage 24, 57,98,57,98:	button goto "",*mball
+		objsize 56,48:pos 628,127:	objimage 24,114,98,114,98:	button goto "",*waza
+		objsize 56,48:pos 685,127:	objimage 24,171,98,171,98:	button goto "",*knm
+		objsize 45,48:pos 742,127:	objimage 24,228,98,228,98:	button goto "",*taisetunamono
+		objsize 477,58:pos 411,236:	objimage 38,0,813,0,871,0,871:	button goto "",*FSW
+		objsize 477,58:pos 411,294:	objimage 38,0,929,0,987,0,987:	button goto "",*NBW
+		objsize 477,58:pos 411,352:objimage 38,0,1161,0,1219,0,1219 :button goto"",*sbm
+		objsize 477,58:pos 411,410:objimage 38,0,1277,0,1335,0,1335:button goto"",*mizunomiyako
+		objsize 477,58:pos 411,468:objimage 38,0,1393,0,1451,0,1451 :button goto"",*trtr
+		objsize 477,58:pos 411,526:objimage 38,0,1509,0,1567,0,1567 :button goto"",*haikyo
+		objsize 477,58:pos 411,582:objimage 38,0,1625,0,1683,0,1683 :button goto"",*tutitokaze
+		redraw 1
+		While 1
+	 		getkey esc,27
+	 		if esc : gosub *main
+	 		wait 1
+		Wend
+		stop
+		*FSW
+			mmstop
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"とある声優のアーティストデビュー\nを飾ったミニアルバム。"
+			onclick goto *waza
+			stop
+		*NBW
+			mmstop
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 64,542:mes"とある声優の記念すべき1stフルアルバム。\n発売に合わせて初の全国ツアーが行われる\nこととなった。"
+			onclick goto *waza
+			stop
+		*sbm
+			color:boxf 39,526,366,679
+			mmstop
+			mmplay 1
+			onclick goto *waza
+			stop
+		*mizunomiyako
+			color:boxf 39,526,366,679
+			mmstop
+			mmplay 2
+			onclick goto *waza
+			stop
+		*trtr
+			color:boxf 39,526,366,679
+			mmstop
+			mmplay 3
+			onclick goto *waza
+			stop
+		*haikyo
+			color:boxf 39,526,366,679
+			mmstop
+			mmplay 4
+			onclick goto *waza
+			stop
+		*tutitokaze
+			color:boxf 39,526,366,679
+			mmstop
+			mmplay 5
+			onclick goto *waza
+			stop
+			
+	*knm
+		redraw 0
+		cls
+		color 255:boxf
+		gcopy 27,0,0,ginfo_dispx,ginfo_dispy//外観設定
+		objsize 56,48:pos 514,127:	objimage 24, 0,147, 0,147:	button goto "",*dogu
+		objsize 56,48:pos 571,127:	objimage 24, 57,147, 57,147:	button goto "",*mball
+		objsize 56,48:pos 628,127:	objimage 24,114,147,114,147:	button goto "",*waza
+		objsize 56,48:pos 685,127:	objimage 24,171,147,171,147:	button goto "",*knm
+		objsize 45,48:pos 742,127:	objimage 24,228,147,228,147:	button goto "",*taisetunamono
+		redraw 1
+			color:boxf 39,526,366,679
+			color 255,255,255
+			pos 66,542:mes"なにももっていないようだ。"
+			stop
+		While 1
+	 		getkey esc,27
+	 		if esc : gosub *main
+	 		wait 1
+		Wend
+		stop
+	*taisetunamono
+		redraw 0
+		cls
+		color 255:boxf
+		gcopy 28,0,0,ginfo_dispx,ginfo_dispy//外観設定
+		objsize 56,48:pos 514,127:	objimage 24, 0,196, 0,196:		button goto "",*dogu
+		objsize 56,48:pos 571,127:	objimage 24, 57,196, 57,196:	button goto "",*mball
+		objsize 56,48:pos 628,127:	objimage 24,114,196,114,196:	button goto "",*waza
+		objsize 56,48:pos 685,127:	objimage 24,171,196,171,196:	button goto "",*knm
+		objsize 45,48:pos 742,127:	objimage 24,228,196,228,196:	button goto "",*taisetunamono
+		objsize 477,58:pos 411,236:	objimage 38,0,1045,0,1103,0,1103:	button goto "",*カレンダー
+		redraw 1
+		While 1
+			getkey esc,27
+			if esc : gosub *main
+			wait 1
+		Wend
+		stop
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*waketimer
+	defdir=dir_cur
+	chdir "C:\\Users\\fms\\Desktop\\EP\\timer" ;ディレクトリをデスクトップに移動
+	exec "timer.exe"
+	chdir defdir
+	goto *mball
+*カレンダー
+	defdir=dir_cur
+	chdir "C:\\Users\\fms\\Desktop\\EP\\calendar" ;ディレクトリをデスクトップに移動
+	exec "calendar.exe"
+	chdir defdir
+	goto	*taisetunamono
+///////////////////////////////////////////////////////////////////////終了動作//////////////////////////////////////////////////////////////////////////////////////
+*toji
+	redraw 0
+	newcom adesktop, CLSID_ActiveDesktop
+	IActiveDesktop_SetWallpaper adesktop, "C:\\Users\\fms\\Desktop\\EP\\メインメニュー風ランチャー\\Wallpaper blue.png"
+	WALLPAPEROPT = 8, WPSTYLE_TILE
+	IActiveDesktop_SetWallpaperOptions adesktop, varptr(WALLPAPEROPT)
+	IActiveDesktop_ApplyChanges adesktop, 7
+	redraw 1
+	end
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
